@@ -1,0 +1,3 @@
+dx --dex --output=patch.apk patch
+
+最后一个参数patch是文件夹，包含了要修复的class文件。注意class文件路径要和包名对应。

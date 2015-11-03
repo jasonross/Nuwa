@@ -1,0 +1,177 @@
+import org.apache.commons.compress.utils.IOUtils
+import org.objectweb.asm.*
+
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
+import java.util.zip.ZipEntry
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "cn.jiajixin.nuwasample"
+        minSdkVersion 9
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(":library")
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:design:22.2.1'
+}
+
+
+byte[] referHackWhenInit(InputStream inputStream) {
+    ClassReader cr = new ClassReader(inputStream);
+    ClassWriter cw = new ClassWriter(cr, 0);
+    ClassVisitor cv = new ClassVisitor(Opcodes.ASM4, cw) {
+        @Override
+        public MethodVisitor visitMethod(int access, String name, String desc,
+                                         String signature, String[] exceptions) {
+
+            MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
+            mv = new MethodVisitor(Opcodes.ASM4, mv) {
+                @Override
+                void visitInsn(int opcode) {
+                    if ("<init>".equals(name) && opcode == Opcodes.RETURN) {
+                        super.visitLdcInsn(Type.getType("Lcn/jiajixin/nuwa/Hack;"));
+                    }
+                    super.visitInsn(opcode);
+                }
+            }
+            return mv;
+        }
+
+    };
+    cr.accept(cv, 0);
+    return cw.toByteArray();
+}
+
+def processClass(File file) {
+    println file.absolutePath
+    def bakClass = new File(file.getParent(), file.name + ".bak")
+    def optClass = new File(file.getParent(), file.name + ".opt")
+
+    FileInputStream inputStream = new FileInputStream(file);
+    FileOutputStream outputStream = new FileOutputStream(optClass)
+
+    outputStream.write(referHackWhenInit(inputStream))
+    inputStream.close()
+    outputStream.close()
+    file.renameTo(bakClass)
+    optClass.renameTo(file)
+}
+
+def processJar(File file) {
+    if (file != null) {
+        def bakJar = new File(file.getParent(), file.name + ".bak")
+        def optJar = new File(file.getParent(), file.name + ".opt")
+
+        def jarFile = new JarFile(file);
+        Enumeration enumeration = jarFile.entries();
+        JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(optJar));
+
+        while (enumeration.hasMoreElements()) {
+            JarEntry jarEntry = (JarEntry) enumeration.nextElement();
+            String entryName = jarEntry.getName();
+            ZipEntry zipEntry = new ZipEntry(entryName);
+
+            InputStream inputStream = jarFile.getInputStream(jarEntry);
+            jarOutputStream.putNextEntry(zipEntry);
+
+            if (entryName.endsWith(".class") && !entryName.endsWith("Application.class") && !entryName.contains("cn/jiajixin/nuwa/")) {
+                println entryName
+                jarOutputStream.write(referHackWhenInit(inputStream));
+            } else {
+                jarOutputStream.write(IOUtils.toByteArray(inputStream));
+            }
+            jarOutputStream.closeEntry();
+        }
+        jarOutputStream.close();
+        jarFile.close();
+
+        file.renameTo(bakJar)
+        optJar.renameTo(file)
+    }
+
+}
+
+def restoreFile(File file) {
+    def bakJar = new File(file.getParent(), file.name + ".bak")
+    if (bakJar.exists()) {
+        file.delete()
+        bakJar.renameTo(file)
+    }
+}
+
+afterEvaluate {
+
+    android.applicationVariants.each { variant ->
+        def preDex = tasks.findByName("preDex${variant.name.capitalize()}")
+        def dex = tasks.findByName("dex${variant.name.capitalize()}")
+
+        if (preDex != null) {
+            Set<File> inputFiles = preDex.inputs.files.files
+            inputFiles.each { inputFile ->
+                def path = inputFile.absolutePath
+                if (path.endsWith("classes.jar") && !path.contains("com.android.support") && !path.contains("/android/m2repository")) {
+                    preDex.doFirst {
+                        processJar(inputFile)
+                    }
+                    preDex.doLast {
+                        restoreFile(inputFile)
+                    }
+                }
+            }
+
+            inputFiles = dex.inputs.files.files
+            println inputFiles
+            inputFiles.each { inputFile ->
+                def path = inputFile.absolutePath
+                if (path.endsWith(".class") && !path.endsWith("Application.class")) {
+                    dex.doFirst {
+                        processClass(inputFile)
+                    }
+                    dex.doLast {
+                        restoreFile(inputFile)
+                    }
+                }
+            }
+
+
+        } else {
+            Set<File> inputFiles = dex.inputs.files.files
+            inputFiles.each { inputFile ->
+                def path = inputFile.absolutePath
+                if (path.endsWith(".jar")) {
+                    dex.doFirst {
+                        processJar(inputFile)
+                    }
+                    dex.doLast {
+                        restoreFile(inputFile)
+                    }
+                }
+            }
+        }
+    }
+}
+
+//todo: R file do not opt
+//plugin
+//how to generate patch
