@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView textView = (TextView) findViewById(R.id.textview);
-        textView.setText("patch success");
+        textView.setText(Hello.say());
     }
 
 }

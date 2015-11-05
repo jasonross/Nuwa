@@ -1,5 +1,7 @@
 package cn.jiajixin.nuwa.util;
 
+import android.util.Log;
+
 import java.lang.reflect.Array;
 
 import dalvik.system.DexClassLoader;
