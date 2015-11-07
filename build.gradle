@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
-        classpath 'cn.jiajixin.nuwa:gradle:1.1.23'
+        classpath 'cn.jiajixin.nuwa:gradle:1.1.28'
     }
 
 }

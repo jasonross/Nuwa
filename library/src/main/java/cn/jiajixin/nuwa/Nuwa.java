@@ -14,11 +14,11 @@ import cn.jiajixin.nuwa.util.DexUtils;
  */
 public class Nuwa {
 
-    private static final String TAG = "hotfix";
+    private static final String TAG = "nuwa";
     private static final String HACK_DEX = "hack.apk";
 
-    private static final String DEX_DIR = "hotfix";
-    private static final String DEX_OPT_DIR = "hotfixopt";
+    private static final String DEX_DIR = "nuwa";
+    private static final String DEX_OPT_DIR = "nuwaopt";
 
 
     public static void init(Context context) {
