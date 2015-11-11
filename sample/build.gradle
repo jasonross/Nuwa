@@ -13,9 +13,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled true
-            proguardFiles 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        qihoo {
+        }
+        xiaomi {
         }
     }
 
@@ -29,7 +39,3 @@ dependencies {
 }
 
 apply plugin: "cn.jiajixin.nuwa"
-
-nuwa {
-    excludeClass = ["Hello.class"]
-}

@@ -1,10 +1,10 @@
-package cn.jiajixin.nuwasample;
+package cn.jiajixin.nuwasample.Hello;
 
 /**
  * Created by jixin.jia on 15/11/5.
  */
 public class Hello {
-    public static String say() {
+    public String say() {
         return "hello world";
     }
 }

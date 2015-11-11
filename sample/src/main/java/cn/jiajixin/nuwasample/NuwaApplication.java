@@ -15,6 +15,6 @@ public class NuwaApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         Nuwa.init(this);
-        Nuwa.loadPatch(this, Environment.getExternalStorageDirectory().getAbsolutePath().concat("/patch.apk"));
+        Nuwa.loadPatch(this, Environment.getExternalStorageDirectory().getAbsolutePath().concat("/patch.jar"));
     }
 }
