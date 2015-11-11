@@ -1,7 +1,4 @@
-
-Nuwa, pure java implementation, can hotfix your android application.
-
-# Nuwa
+## Nuwa
 
 Nuwa is a goddess in ancient Chinese mythology best known for repairing the pillar of heaven. 
 
@@ -135,7 +132,7 @@ There are two types of gradle task to generate patch file：
 ## How it Works 
 Inspired by QZone hotfix solution from this [article](http://bugly.qq.com/blog/?p=781).
 
-### Nuwa Gradle 
+### [Nuwa Gradle](https://github.com/jasonross/NuwaGradle) 
 
 * inject into all classes one java bytecode referring the Hack.class from a different dex, which can avoid CLASS_ISPREVERIFIED error when replacing class. 
 * generate patch.jar according to mapping.txt and classes hash of last published APK.
