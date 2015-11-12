@@ -36,4 +36,3 @@ build/
 #Gradle
 .gradle/
 .DS_Store
-.gradle.properties
