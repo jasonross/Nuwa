@@ -81,8 +81,10 @@ artifacts {
 }
 
 bintray {
-    user = USER
-    key = KEY
+    user = 'jasonross'
+    if (project.hasProperty("KEY")) {
+        key = KEY
+    }
 
     configurations = ['archives']
     pkg {
