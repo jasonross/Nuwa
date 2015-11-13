@@ -37,7 +37,7 @@ With this Nuwa project，you can also have the repairing power, fix your android
 ### Get Gradle Plugin
 
 1. add following to the build.gradle of your root project.
->classpath 'cn.jiajixin.nuwa:gradle:1.2.1'
+>classpath 'cn.jiajixin.nuwa:gradle:1.2.2'
 
 	build.gradle maybe look like this:
 	
@@ -48,7 +48,7 @@ With this Nuwa project，you can also have the repairing power, fix your android
 	    }
 	    dependencies {
 	        classpath 'com.android.tools.build:gradle:1.2.3'
-	        classpath 'cn.jiajixin.nuwa:gradle:1.2.1'
+	        classpath 'cn.jiajixin.nuwa:gradle:1.2.2'
 	    }
 	}
 	```
