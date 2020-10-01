@@ -69,7 +69,7 @@ With this Nuwa project，you can also have the repairing power, fix your android
 	```
 	
 ### Use Nuwa SDK
-1. add following to your application class:
+1. add the following to your application class:
 
 	```
 	@Override
