@@ -6,7 +6,7 @@
 
 Nuwa is a goddess in ancient Chinese mythology best known for repairing the pillar of heaven. 
 
-With this Nuwa project，you can also have the repairing power, fix your android applicaiton without have to publish a new APK to the appstore.
+With this Nuwa project, you can also have the repairing power, fix your android application without have to publish a new APK to the App Store.
 
 ## Features
 * Support both dalvik and art runtime.
